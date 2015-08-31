@@ -13,7 +13,6 @@ import android.view.View.OnTouchListener;
 public class Player implements Element, OnTouchListener
 {
 	private float x, y, touchX, touchY;
-	private boolean follow;
 	private int color;
 	
 	public Player()
