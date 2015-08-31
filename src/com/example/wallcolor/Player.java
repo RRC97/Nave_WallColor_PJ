@@ -1,5 +1,8 @@
 package com.example.wallcolor;
 
+import java.util.Date;
+import java.util.Random;
+
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -14,14 +17,15 @@ public class Player implements Element, OnTouchListener
 {
 	private float x, y, touchX, touchY;
 	private int color;
+	private Date time = new Date();
 	
 	public Player()
 	{
-		color = Color.GREEN;
+		color = BaseColor.GREEN;
 	}
 	@Override
 	public void onDraw(Canvas canvas)
-	{
+	{		
 		Paint paint = new Paint();
 		paint.setColor(color);
 		canvas.drawCircle(x, y, 40, paint);
@@ -42,6 +46,14 @@ public class Player implements Element, OnTouchListener
 		
 		if(y > touchY) y -= distY / 10;
 		else if(y < touchY) y += distY / 10;
+		
+		int seconds = (int)time.getTime();
+		int current = (int)new Date().getTime();
+		if(current - seconds > 4)
+		{
+			color = BaseColor.getRandonColor();
+			time = new Date();
+		}
 	}
 
 	@Override
