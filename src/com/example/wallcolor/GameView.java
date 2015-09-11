@@ -1,5 +1,7 @@
 package com.example.wallcolor;
 
+import java.util.Date;
+
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -13,6 +15,10 @@ public class GameView extends View implements Runnable
 {
 	private Handler handler;
 	private Player player;
+	private WallManager wallManager;
+	public static float width, height;
+	private Date time = new Date();
+	public static float deltaTime;
 	
 	public GameView(Context context)
 	{
@@ -21,7 +27,11 @@ public class GameView extends View implements Runnable
 		handler = new Handler();
 		handler.postDelayed(this, 1);
 		
+		width = getResources().getDisplayMetrics().widthPixels;
+		height = getResources().getDisplayMetrics().heightPixels;
+		
 		player = new Player();
+		wallManager = new WallManager(player, width, height);
 	}
 	@Override
 	public void onDraw(Canvas canvas)
@@ -30,12 +40,20 @@ public class GameView extends View implements Runnable
 		Paint paint = new Paint();
 		paint.setColor(Color.DKGRAY);
 		canvas.drawPaint(paint);
-		
+
+		wallManager.onDraw(canvas);
 		player.onDraw(canvas);
 	}
 	public void onUpdate()
 	{
 		player.onUpdate();
+		wallManager.onUpdate();
+
+		Date now = new Date();
+		int seconds = (int)time.getTime();
+		int current = (int)now.getTime();
+		deltaTime = (current - seconds);
+		time = now;
 	}
 	@Override
 	public void run()

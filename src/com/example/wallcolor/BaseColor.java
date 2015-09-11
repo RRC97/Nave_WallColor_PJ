@@ -17,7 +17,7 @@ public class BaseColor
 	public static int MAGENTA = Color.parseColor("#FF00FF");
 	public static int ORANGE = Color.parseColor("#FFA500");
 	
-	public static int getRandonColor()
+	public static int getRandomColor()
 	{
 		int result = 0;
 		int id = random.nextInt(7);

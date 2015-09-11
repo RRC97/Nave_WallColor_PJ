@@ -15,22 +15,25 @@ import android.view.View.OnTouchListener;
 
 public class Player implements Element, OnTouchListener
 {
-	private float x, y, touchX, touchY;
+	private float x, y, touchX, touchY, radius;
 	private int color;
-	private Date time = new Date();
+	private float time;
 	
 	public Player()
 	{
 		color = BaseColor.GREEN;
+		x = touchX = GameView.width / 2;
+		y = touchY = GameView.height / 2;
+		radius = (GameView.width + GameView.height) / 30;
 	}
 	@Override
 	public void onDraw(Canvas canvas)
 	{		
 		Paint paint = new Paint();
 		paint.setColor(color);
-		canvas.drawCircle(x, y, 40, paint);
+		canvas.drawCircle(x, y, radius, paint);
 		paint.setColor(Color.DKGRAY);
-		canvas.drawCircle(x, y, 30, paint);
+		canvas.drawCircle(x, y, radius * 0.75f, paint);
 	}
 
 	@Override
@@ -47,12 +50,14 @@ public class Player implements Element, OnTouchListener
 		if(y > touchY) y -= distY / 10;
 		else if(y < touchY) y += distY / 10;
 		
-		int seconds = (int)time.getTime();
-		int current = (int)new Date().getTime();
-		if(current - seconds > 4)
+		time += GameView.deltaTime;
+		if(time > 5000)
 		{
-			color = BaseColor.getRandonColor();
-			time = new Date();
+			int newColor = color;
+			while(newColor == color)
+				newColor = BaseColor.getRandomColor();
+			color = newColor;
+			time = 0;
 		}
 	}
 
