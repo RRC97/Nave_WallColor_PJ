@@ -34,11 +34,20 @@ public class WallManager implements Element
 		time += GameView.deltaTime;
 		if(time > 5000)
 		{
-			float w = (GameView.width + GameView.height) / 10;
-			float h = w;
-			int c = BaseColor.getRandomColor();
 			walls.add(new Wall());
 			time = 0;
+		}
+		
+		for(Wall wall : walls)
+		{
+			if(wall.getX() > GameView.width
+			|| wall.getY() > GameView.height
+			|| wall.getX() + wall.getWidth() < 0
+			|| wall.getY() + wall.getHeight() < 0)
+			{
+				walls.remove(wall);
+				break;
+			}
 		}
 	}
 }

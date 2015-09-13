@@ -13,6 +13,7 @@ public class Wall implements Element
 	}
 	public float x,y,width,height;
 	private Direction direction;
+	private float speed = 1;
 	int color;
 	
 	public Wall()
@@ -65,10 +66,10 @@ public class Wall implements Element
 	{
 		switch (direction)
 		{
-			case Right: this.x += 1; break;
-			case Left: this.x -= 1; break;
-			case Top: this.y -= 1; break;
-			case Bottom: this.y += 1; break;
+			case Right: this.x += speed; break;
+			case Left: this.x -= speed; break;
+			case Top: this.y -= speed; break;
+			case Bottom: this.y += speed; break;
 		}
 	}
 	
@@ -85,5 +86,22 @@ public class Wall implements Element
 			case 3: result = Direction.Bottom; break;
 		}
 		return result;
+	}
+	
+	public float getX()
+	{
+		return x;
+	}
+	public float getY()
+	{
+		return y;
+	}
+	public float getWidth()
+	{
+		return width;
+	}
+	public float getHeight()
+	{
+		return height;
 	}
 }

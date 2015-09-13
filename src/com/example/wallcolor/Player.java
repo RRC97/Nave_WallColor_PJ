@@ -50,6 +50,15 @@ public class Player implements Element, OnTouchListener
 		if(y > touchY) y -= distY / 10;
 		else if(y < touchY) y += distY / 10;
 		
+		if(x + radius > GameView.width)
+			x = GameView.width - radius;
+		if(x - radius < 0)
+			x = radius;
+		if(y + radius > GameView.height)
+			y = GameView.height - radius;
+		if(y - radius < 0)
+			y = radius;
+		
 		time += GameView.deltaTime;
 		if(time > 5000)
 		{
