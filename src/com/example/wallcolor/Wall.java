@@ -4,6 +4,7 @@ import java.util.Random;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.RectF;
 
 public class Wall implements Element
 {
@@ -11,9 +12,9 @@ public class Wall implements Element
 	{
 		Right, Left, Top, Bottom
 	}
-	public float x,y,width,height;
+	private float x,y,width,height;
 	private Direction direction;
-	private float speed = 1;
+	private float speed = 3;
 	int color;
 	
 	public Wall()
@@ -25,20 +26,20 @@ public class Wall implements Element
 		switch (direction)
 		{
 			case Right:
-				this.x = -this.width;
-				this.y = random.nextFloat() * (GameView.height - this.height);
+				this.x = -this.width/2;
+				this.y = random.nextFloat() * (GameView.height - this.height/2);
 				break;
 			case Left:
-				this.x = GameView.width;
-				this.y = random.nextFloat() * (GameView.height - this.height);
+				this.x = GameView.width + this.width/2;
+				this.y = random.nextFloat() * (GameView.height - this.height/2);
 				break;
 			case Bottom:
-				this.x = random.nextFloat() * (GameView.width - this.width);
-				this.y = -this.height;
+				this.x = random.nextFloat() * (GameView.width - this.width/2);
+				this.y = -this.height/2;
 				break;
 			case Top:
-				this.x = random.nextFloat() * (GameView.width - this.width);
-				this.y = GameView.height;
+				this.x = random.nextFloat() * (GameView.width - this.width/2);
+				this.y = GameView.height + this.height/2;
 				break;
 		}
 	}
@@ -57,7 +58,8 @@ public class Wall implements Element
 	{
 		Paint paint = new Paint();
 		paint.setColor(this.color);
-		canvas.drawRect(this.x, this.y, this.x + this.width, this.y + this.height, paint);
+		canvas.drawRect(this.x - this.width/2, this.y - this.height/2,
+					this.x + this.width/2, this.y + this.height/2, paint);
 		// TODO Auto-generated method stub
 		
 	}
@@ -103,5 +105,24 @@ public class Wall implements Element
 	public float getHeight()
 	{
 		return height;
+	}
+	public int getColor()
+	{
+		return color;
+	}
+	
+	public void onCollisionWall(Wall wall)
+	{
+		if(wall.x - wall.width/2 < x + width/2 && wall.x + wall.width/2 > x - width/2
+		&& wall.y - wall.width/2 < y + height/2 && wall.y + wall.height/2 > y - height/2)
+		{
+			switch (direction)
+			{
+				case Right: direction = Direction.Left; break;
+				case Left: direction = Direction.Right; break;
+				case Top: direction = Direction.Bottom; break;
+				case Bottom: direction = Direction.Top; break;
+			}
+		}
 	}
 }

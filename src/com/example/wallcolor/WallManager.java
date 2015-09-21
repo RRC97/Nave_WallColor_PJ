@@ -5,6 +5,9 @@ import java.util.List;
 
 import com.example.wallcolor.Wall.Direction;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Canvas;
 
 public class WallManager implements Element 
@@ -32,7 +35,7 @@ public class WallManager implements Element
 			wall.onUpdate();
 		// TODO Auto-generated method stub
 		time += GameView.deltaTime;
-		if(time > 5000)
+		if(time > 1000)
 		{
 			walls.add(new Wall());
 			time = 0;
@@ -40,14 +43,37 @@ public class WallManager implements Element
 		
 		for(Wall wall : walls)
 		{
-			if(wall.getX() > GameView.width
-			|| wall.getY() > GameView.height
-			|| wall.getX() + wall.getWidth() < 0
-			|| wall.getY() + wall.getHeight() < 0)
+			if(wall.getX() - wall.getWidth()/2 > GameView.width
+			|| wall.getY() - wall.getHeight()/2 > GameView.height
+			|| wall.getX() + wall.getWidth()/2 < 0
+			|| wall.getY() + wall.getHeight()/2 < 0)
 			{
 				walls.remove(wall);
 				break;
 			}
 		}
+		
+		for(Wall wall1 : walls)
+		{
+			for(Wall wall2 : walls)
+			{
+				if(wall1 != wall2)
+				{
+					wall1.onCollisionWall(wall2);
+				}
+			}
+		}
+	}
+	public boolean onFinish()
+	{
+		for(Wall wall : walls)
+		{
+			if(player.onCollisionWall(wall)
+			&& player.getColor() != wall.getColor())
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 }

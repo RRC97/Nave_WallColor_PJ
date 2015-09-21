@@ -8,19 +8,23 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Path.Direction;
+import android.graphics.Rect;
+import android.graphics.RectF;
 import android.graphics.Region;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 
-public class Player implements Element, OnTouchListener
+public class Player implements Element
 {
 	private float x, y, touchX, touchY, radius;
-	private int color;
-	private float time;
+	private int color, newColor;
+	private float time, timeDouble;
+	private boolean doubleTouch;
 	
 	public Player()
 	{
+		newColor = BaseColor.RED;
 		color = BaseColor.GREEN;
 		x = touchX = GameView.width / 2;
 		y = touchY = GameView.height / 2;
@@ -34,6 +38,15 @@ public class Player implements Element, OnTouchListener
 		canvas.drawCircle(x, y, radius, paint);
 		paint.setColor(Color.DKGRAY);
 		canvas.drawCircle(x, y, radius * 0.75f, paint);
+		paint.setColor(newColor);
+		float circleX = x - radius * 0.75f;
+		float circleY = y - radius * 0.75f;
+		float circleW = x + radius * 0.75f;
+		float circleH = y + radius * 0.75f;
+		canvas.drawArc(new RectF(circleX, circleY, circleW, circleH),
+				-90, (time / 5000) * 360, true, paint);
+		paint.setColor(color);
+		canvas.drawCircle(x, y, radius * 0.65f, paint);
 	}
 
 	@Override
@@ -62,16 +75,37 @@ public class Player implements Element, OnTouchListener
 		time += GameView.deltaTime;
 		if(time > 5000)
 		{
-			int newColor = color;
+			color = newColor;
+			newColor = color;
 			while(newColor == color)
 				newColor = BaseColor.getRandomColor();
-			color = newColor;
 			time = 0;
 		}
 	}
+	
+	public boolean onCollisionWall(Wall wall)
+	{
+		float distanceX = wall.getX() - x;
+		float distanceY = wall.getY() - y;
+		distanceX = distanceX < 0 ? -distanceX : distanceX;
+		distanceY = distanceY < 0 ? -distanceY : distanceY;
+		float hip = (float)Math.sqrt(distanceX * distanceX + distanceY * distanceY);
+		
+		if(hip < radius + wall.getWidth()/2
+		|| hip < radius + wall.getHeight()/2)
+		{
+			return true;
+		}
+		if((distanceX - wall.getWidth()/2) * (distanceX - wall.getWidth()/2) +
+		(distanceY - wall.getHeight()/2) * (distanceY - wall.getHeight()/2) <= radius * radius)
+		{
+			return true;
+		}
+		
+		return false;
+	}
 
-	@Override
-	public boolean onTouch(View v, MotionEvent me)
+	public boolean onTouchMove(MotionEvent me)
 	{
 		if(me.getAction() == MotionEvent.ACTION_DOWN
 		|| me.getAction() == MotionEvent.ACTION_MOVE)
@@ -81,5 +115,22 @@ public class Player implements Element, OnTouchListener
 		}
 		
 		return true;
+	}
+	
+	public boolean onTouchTeleport(MotionEvent me)
+	{
+		if(me.getAction() == MotionEvent.ACTION_DOWN
+		|| me.getAction() == MotionEvent.ACTION_MOVE)
+		{
+			touchX = x = me.getX();
+			touchY = y = me.getY();
+		}
+		
+		return true;
+	}
+	
+	public int getColor()
+	{
+		return color;
 	}
 }
