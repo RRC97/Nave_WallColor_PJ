@@ -37,7 +37,7 @@ public class GameScene implements Scene
 		
 		if(wallManager.onFinish())
 		{
-			view.changeScene("Menu");
+			view.changeScene(0);
 		}
 	}
 	

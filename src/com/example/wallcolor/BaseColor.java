@@ -32,6 +32,20 @@ public class BaseColor
 			case 6: result = ORANGE; break;
 		}
 		return result;
-		
+	}
+	public static int getColorById(int id)
+	{
+		int result = 0;
+		switch(id)
+		{
+			case 0: result = BLUE; break;
+			case 1: result = AQUA; break;
+			case 2: result = RED; break;
+			case 3: result = GREEN; break;
+			case 4: result = YELLOW; break;
+			case 5: result = MAGENTA; break;
+			case 6: result = ORANGE; break;
+		}
+		return result;
 	}
 }

@@ -31,7 +31,7 @@ public class GameView extends View implements Runnable
 		width = getResources().getDisplayMetrics().widthPixels;
 		height = getResources().getDisplayMetrics().heightPixels;
 
-		scene = new GameScene(this);
+		scene = new MenuScene(this);
 	}
 	@Override
 	public void onDraw(Canvas canvas)
@@ -60,9 +60,14 @@ public class GameView extends View implements Runnable
 		invalidate();
 		handler.postDelayed(this, 1);
 	}
-	public void changeScene(String name)
+	public void changeScene(int id)
 	{
-		scene = new MenuScene(this);
+		switch(id)
+		{
+			case 0: scene = new MenuScene(this); break;
+			case 1: scene = new GameScene(this); break;
+			case 2: scene = new GoverScene(this); break;
+		}
 	}
 	@Override
 	public boolean onTouchEvent(MotionEvent me)
