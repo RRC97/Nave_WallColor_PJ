@@ -37,7 +37,8 @@ public class GameScene implements Scene
 		
 		if(wallManager.onFinish())
 		{
-			view.changeScene(0);
+			view.setHighscore(clock.getLikeScore());
+			view.changeScene(2);
 		}
 	}
 	

@@ -19,7 +19,7 @@ public class PlayerEffect implements Element
 		newColor = BaseColor.RED;
 		color = BaseColor.GREEN;
 		x = GameView.width / 2;
-		y = GameView.height * 0.66f;
+		y = GameView.height * 0.75f;
 		yNormal = GameView.height / 2;
 		radius = (GameView.width + GameView.height) / 10;
 		radiusNormal = (GameView.width + GameView.height) / 30;

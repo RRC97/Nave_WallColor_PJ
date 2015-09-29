@@ -9,10 +9,12 @@ public class MenuScene implements Scene
 {
 	private GameView view;
 	private PlayerEffect playerEffect;
+	private int highscore;
 	public MenuScene(GameView v)
 	{
 		view = v;
 		playerEffect = new PlayerEffect();
+		highscore = view.getHighscore();
 	}
 	
 	@Override
@@ -51,6 +53,10 @@ public class MenuScene implements Scene
 		}
 		
 		playerEffect.onDraw(c);
+		
+		text.setColor(Color.WHITE);
+		text.setTextSize((GameView.width + GameView.height) / 30);
+		c.drawText("HIGHSCORE: " + Clock.valueToString(highscore), GameView.width / 2, 450, text);
 	}
 
 	@Override

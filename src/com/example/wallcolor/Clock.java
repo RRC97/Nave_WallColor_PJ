@@ -34,5 +34,23 @@ public class Clock implements Element
 	{
 		time += GameView.deltaTime;
 	}
+	
+	public static String valueToString(int value)
+	{
+		int millisecond = (int)(value % 1000);
+		int second = (int)((value / 1000) % 100);
+		int minute = (int)(value / 100000);
+
+		String text = String.format("%02d:%02d:%03d",minute,second,millisecond);
+		return text;
+	}
+	
+	public int getLikeScore()
+	{
+		int millisecond = (int)(time % 1000);
+		int second = (int)((time / 1000) % 60);
+		int minute = (int)((time / 1000) / 60);
+		return (minute * 100000) + (second * 1000) + millisecond;
+	}
 
 }

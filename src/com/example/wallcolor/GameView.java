@@ -1,16 +1,28 @@
 package com.example.wallcolor;
 
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Toast;
 
 public class GameView extends View implements Runnable
 {
@@ -73,5 +85,66 @@ public class GameView extends View implements Runnable
 	public boolean onTouchEvent(MotionEvent me)
 	{
 		return scene.touch(me);
+	}
+	public int getHighscore()
+	{
+		int result = 0;
+		try
+		{
+			FileInputStream stream = getContext().openFileInput("highscore");
+			BufferedInputStream buffered = new BufferedInputStream(stream);
+			byte[] bytes = new byte[1024];
+			buffered.read(bytes);
+			List<Byte> arrayList = new ArrayList<Byte>();
+			for(Byte b : bytes)
+				if(b.intValue() > 0)
+					arrayList.add(b);
+			bytes = new byte[arrayList.size()];
+			for(int i = 0; i < bytes.length; i++)
+				bytes[i] = arrayList.get(i);
+			String string = new String(bytes, "UTF-8");
+			result = Integer.parseInt(string);
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		return result;
+	}
+	public void setHighscore(int value)
+	{
+		if(getHighscore() > value)
+			return;
+		try
+		{
+			FileOutputStream fos = getContext().openFileOutput("highscore", Context.MODE_PRIVATE);
+			byte[] bytes = (""+value).getBytes();
+			fos.write(bytes);
+			fos.flush();
+			fos.close();
+			System.out.println("VALUE: " + value);
+		}
+		catch (Exception e)
+		{
+		}
+		
+		try
+		{
+			HttpClient httpClient = new DefaultHttpClient();
+			HttpPost httpPost = new HttpPost("http://rrc97.net76.net:80/add.php");
+			List<NameValuePair> list = new ArrayList<NameValuePair>(3);
+			list.add(new BasicNameValuePair("block", "paodebatatacomgergilimeagriao123"));
+			list.add(new BasicNameValuePair("name", "JAMV"));
+			list.add(new BasicNameValuePair("value", ""+getHighscore()));
+			httpPost.setEntity(new UrlEncodedFormEntity(list));
+			HttpResponse response = httpClient.execute(httpPost);
+			String responseStr = EntityUtils.toString(response.getEntity());
+			System.out.println(responseStr);
+		}
+		catch (Exception e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }
